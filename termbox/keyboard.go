@@ -8,7 +8,7 @@ import (
 	term "github.com/nsf/termbox-go"
 )
 
-// Keyboard is a keyboard backend for libGLFW.
+// Keyboard is a keyboard backend for termbox-go.
 type Keyboard struct {
 	*keyboard.Base
 }
