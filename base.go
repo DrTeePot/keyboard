@@ -49,35 +49,44 @@ func (b *Base) RecordKey(key Key, mods Modifier) {
 
 	b.stamp = time.Now()
 	b.record = append(b.record, Key(mods)<<8|key)
-	binding := b.match()
 
+	// If we have a binding match, invoke its handler.
+	binding := b.fullMatch()
 	if binding != nil {
 		b.record = b.record[:0]
 		binding.Handler()
+		return
+	}
+
+	// If no match is possible with the current recording, clear the buffer.
+	if !b.partialMatch() {
+		b.record = b.record[:0]
+		return
 	}
 }
 
-func (b *Base) match() *Binding {
-	var k int
-	var keys []Key
+// partialMatch returns true if the currently recorded sequence
+// is a partial match for one of our bindings.
+func (b *Base) partialMatch() bool {
+	rlen := len(b.record)
 
-	record := b.record
-
-outer:
-	for _, b := range b.bindings {
-		keys = b.Keys
-
-		if len(keys) != len(record) {
-			continue
+	for _, bind := range b.bindings {
+		if rlen < len(bind.Keys) && matchList(b.record, bind.Keys[:rlen]) {
+			return true
 		}
+	}
 
-		for k = range record {
-			if record[k] != keys[k] {
-				continue outer
-			}
+	return false
+}
+
+// fullMatch checks of the currently recorded sequence matches one of our bindings.
+func (b *Base) fullMatch() *Binding {
+	rlen := len(b.record)
+
+	for _, bind := range b.bindings {
+		if rlen == len(bind.Keys) && matchList(b.record, bind.Keys) {
+			return bind
 		}
-
-		return b
 	}
 
 	return nil
@@ -146,4 +155,15 @@ func (b *Base) index(key string) int {
 	}
 
 	return -1
+}
+
+// matchList returns true if the two list contents match. 
+func matchList(a, b []Key) bool {
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+
+	return true
 }
