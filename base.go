@@ -157,7 +157,7 @@ func (b *Base) index(key string) int {
 	return -1
 }
 
-// matchList returns true if the two list contents match. 
+// matchList returns true if the two list contents match.
 func matchList(a, b []Key) bool {
 	for i := range a {
 		if a[i] != b[i] {
