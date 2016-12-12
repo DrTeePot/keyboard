@@ -4,7 +4,7 @@
 package glfw
 
 import (
-	"github.com/go-gl/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/jteeuwen/keyboard"
 )
 
@@ -30,16 +30,16 @@ func New() keyboard.Keyboard {
 // if the given key is a known modifier.
 func isMod(key int) keyboard.Modifier {
 	switch key {
-	case glfw.KeyLshift, glfw.KeyRshift:
+	case glfw.KeyLeftShift, glfw.KeyRightShift:
 		return keyboard.ModShift
 
-	case glfw.KeyLctrl, glfw.KeyRctrl:
+	case glfw.KeyLeftControl, glfw.KeyRightControl:
 		return keyboard.ModCtrl
 
-	case glfw.KeyLalt, glfw.KeyRalt:
+	case glfw.KeyLeftAlt, glfw.KeyRghtAlt:
 		return keyboard.ModAlt
 
-	case glfw.KeyLsuper, glfw.KeyRsuper:
+	case glfw.KeyLeftSuper, glfw.KeyRightSuper:
 		return keyboard.ModSuper
 	}
 
